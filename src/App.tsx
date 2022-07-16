@@ -4,14 +4,14 @@ import { GetAllChampions, GetChampionFull } from './core/leagueAPI/requestDragon
 import SpellDiv from './components/SpellDiv'
 
 function App() {
-  const [champion, setChampion] = useState<IChampionFull>("")
+  const [champion, setChampion] = useState<any>("")
   const [spellList, setSpellList] = useState([])
-  var spellDiv_list: JSX.Element[] = []
+  let spellDiv_list: Array<any> = []
 
   useEffect(() => {
     GetAllChampions().then(element => {
       const values = Object.values(element)
-      const randomValue = values[parseInt(Math.random() * values.length)]
+      const randomValue = values[parseInt(Math.random() * values.length + "")]
 
       GetChampionFull(randomValue.name).then(champion => {
         setChampion(champion)
@@ -19,7 +19,7 @@ function App() {
         champion.spells?.map(spell => {
           spellDiv_list.push(<SpellDiv args={spell} />)
 
-          setSpellList(spellDiv_list)
+          setSpellList(spellDiv_list as any)
         })
       })
     }
@@ -48,7 +48,7 @@ function App() {
           onClick={() => {
             GetAllChampions().then(element => {
               const values = Object.values(element)
-              const randomValue = values[parseInt(Math.random() * values.length)]
+              const randomValue = values[parseInt(Math.random() * values.length + "")]
 
               GetChampionFull(randomValue.name).then(champion => {
                 setChampion(champion)
@@ -57,7 +57,7 @@ function App() {
                   
                   spellDiv_list.push(<SpellDiv args={spell} />)
 
-                  setSpellList(spellDiv_list)
+                  setSpellList(spellDiv_list as any)
                 })
               })
             })
