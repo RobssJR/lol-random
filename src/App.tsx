@@ -3,14 +3,18 @@ import { IChampionFull } from './core/interfaces/IChampionFull'
 import { GetAllChampions, GetChampionFull } from './core/leagueAPI/requestDragonAPI'
 import SpellDiv from './components/SpellDiv'
 
+var spellDiv_list: Array<any> = []
+var champion_list: Array<any> = []
+
 function App() {
   const [champion, setChampion] = useState<any>("")
   const [spellList, setSpellList] = useState([])
-  let spellDiv_list: Array<any> = []
 
   useEffect(() => {
-    GetAllChampions().then(element => {
-      const values = Object.values(element)
+    GetAllChampions().then(res => {
+      champion_list = res
+
+      const values = Object.values(champion_list)
       const randomValue = values[parseInt(Math.random() * values.length + "")]
 
       GetChampionFull(randomValue.name).then(champion => {
@@ -22,8 +26,9 @@ function App() {
           setSpellList(spellDiv_list as any)
         })
       })
-    }
-    )
+    })
+
+
   }, [])
 
   console.log(champion)
@@ -46,23 +51,20 @@ function App() {
         </div>
         <button className=' rounded bg-tranparent h-16 w-44 my-auto ml-5 border-lime-500 border-2 text-lime-500 hover:bg-lime-500 hover:text-white'
           onClick={() => {
-            GetAllChampions().then(element => {
-              const values = Object.values(element)
-              const randomValue = values[parseInt(Math.random() * values.length + "")]
+            const values = Object.values(champion_list)
+            const randomValue = values[parseInt(Math.random() * values.length + "")]
+            spellDiv_list = []
 
-              GetChampionFull(randomValue.name).then(champion => {
-                setChampion(champion)
+            GetChampionFull(randomValue.name).then(champion => {
+              setChampion(champion)
 
-                champion.spells?.map(spell => {
-                  
-                  spellDiv_list.push(<SpellDiv args={spell} />)
+              champion.spells?.map(spell => {
+                spellDiv_list.push(<SpellDiv args={spell} />)
 
-                  setSpellList(spellDiv_list as any)
-                })
+                setSpellList(spellDiv_list as any)
               })
             })
-          }
-          }>Random champion</button>
+          }}>Random champion</button>
       </div>
     </div>
   )
